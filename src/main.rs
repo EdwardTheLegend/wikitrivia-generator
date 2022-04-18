@@ -45,10 +45,9 @@ fn main() {
 
     for line in lines {
         seen_count += 1;
+        println!("{}", seen_count);
         if let Ok(item_json) = line {
-            if let Some(item) =
-                process_item_json(&item_json, &mut id_label_map, &client)
-            {
+            if let Some(item) = process_item_json(&item_json, &mut id_label_map, &client) {
                 count += 1;
                 info!(
                     "Count={}  Seen={}  Total={}  Percent={}  ID Map={}",

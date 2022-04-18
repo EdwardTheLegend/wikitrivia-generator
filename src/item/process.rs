@@ -1,5 +1,5 @@
 use log::debug;
-use regex::Regex;
+// use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::collections::HashMap;
@@ -41,62 +41,63 @@ fn get_description(item_json: &Value) -> Option<String> {
     return Some(description);
 }
 
-fn ok_description(description: &str) -> bool {
-    let description_blocklist = [
-        // Space objects
-        r"galaxy",
-        r"constellation",
-        r"star",
-        r"planet",
-        r"nebula",
-        r"moon",
-        r"supernova",
-        r"asteroid",
-        r"cluster",
-        r"natural satellite",
-        // Chemicals
-        r"compound",
-        r"element",
-        // Locations
-        r"region",
-        r"state",
-        // r"country",
-        r"capital",
-        r"borough",
-        r"community",
-        r"department",
-        r"province",
-        r"county",
-        r"city",
-        r"town",
-        r"commune",
-        r"federal subject",
-        // Niches
-        r"football",
-        r"basketball",
-        r"baseball",
-        r"esportiva",
-        r"sport",
-        r"team",
-        // Datetimes
-        r"decade",
-        r"domain",
-        // Animals
-        r"species",
-    ];
+// fn ok_description(description: &str) -> bool {
+//     let description_blocklist = [
+//         // Space objects
+//         r"galaxy",
+//         r"constellation",
+//         r"star",
+//         r"planet",
+//         r"nebula",
+//         r"moon",
+//         r"supernova",
+//         r"asteroid",
+//         r"cluster",
+//         r"natural satellite",
+//         // Chemicals
+//         r"compound",
+//         r"element",
+//         // Locations
+//         r"region",
+//         r"state",
+//         // r"country",
+//         r"capital",
+//         r"borough",
+//         r"community",
+//         r"department",
+//         r"province",
+//         r"county",
+//         r"city",
+//         r"town",
+//         r"commune",
+//         r"federal subject",
+//         // Niches
+//         r"football",
+//         r"basketball",
+//         r"baseball",
+//         r"esportiva",
+//         r"sport",
+//         r"team",
+//         // Datetimes
+//         r"decade",
+//         r"domain",
+//         // Animals
+//         r"species",
+//     ];
 
-    for re in description_blocklist.iter() {
-        if Regex::new(re)
-            .unwrap()
-            .is_match(&description.to_lowercase())
-        {
-            debug!("Is in description blocklist");
-            return false;
-        }
-    }
+//     for re in description_blocklist.iter() {
+//         if Regex::new(re)
+//             .unwrap()
+//             .is_match(&description.to_lowercase())
+//         {
+//             debug!("Is in description blocklist");
+//             return false;
+//         }
+//     }
 
-    return true;
-}
+//     return true;
+// }
+
 fn get_instance_of(
     item_json: &Value,
     id_label_map: &mut HashMap<String, String>,
@@ -123,19 +124,19 @@ fn ok_instance_of(instance_of: &Vec<String>) -> bool {
     return true;
 }
 
-fn get_num_sitelinks(item_json: &Value) -> Option<usize> {
-    let num_sitelinks = item_json["sitelinks"].as_object()?;
-    return Some(num_sitelinks.keys().len());
-}
+// fn get_num_sitelinks(item_json: &Value) -> Option<usize> {
+//     let num_sitelinks = item_json["sitelinks"].as_object()?;
+//     return Some(num_sitelinks.keys().len());
+// }
 
-fn enough_sitelinks(num_sitelinks: usize) -> bool {
-    if num_sitelinks < 15 {
-        debug!("Not enough sitelinks");
-        return false;
-    }
+// fn enough_sitelinks(num_sitelinks: usize) -> bool {
+//     if num_sitelinks < 15 {
+//         debug!("Not enough sitelinks");
+//         return false;
+//     }
 
-    return true;
-}
+//     return true;
+// }
 
 pub fn process_item_json(
     item_json: &str,
@@ -145,26 +146,29 @@ pub fn process_item_json(
 ) -> Option<Item> {
     let item_json: Value = serde_json::from_str(&item_json).unwrap();
 
-    let population = get_population(&item_json).unwrap();
+    let population = get_population(&item_json).unwrap_or_default();
 
     let description = get_description(&item_json)?;
 
-    if !ok_description(&description) {
-        return None;
-    }
+    // if !ok_description(&description) {
+    //     println!("bad description");
+    //     return None;
+    // }
 
     let id = get_id(&item_json)?;
     let wikipedia_title = get_wikipedia_title(&item_json)?;
     let instance_of = get_instance_of(&item_json, id_label_map, client)?;
 
     if !ok_instance_of(&instance_of) {
+        println!("bad instance of");
         return None;
     }
-    let num_sitelinks = get_num_sitelinks(&item_json)?;
+    // let num_sitelinks = get_num_sitelinks(&item_json)?;
 
-    if !enough_sitelinks(num_sitelinks) {
-        return None;
-    }
+    // if !enough_sitelinks(num_sitelinks) {
+    //     println!("not enough sitelinks");
+    //     return None;
+    // }
 
     let page_views = page_views::get(&wikipedia_title, client)?;
 
