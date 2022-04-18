@@ -1,3 +1,4 @@
 /target
 *.bz2
 *.json
+.history/
