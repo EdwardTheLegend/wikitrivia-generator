@@ -6,11 +6,7 @@ use std::collections::HashMap;
 
 use crate::item::Item;
 
-use self::wikipedia::Wikipedia;
-
 mod item_label;
-mod page_views;
-mod wikipedia;
 
 fn first_letter_to_uppper_case(s1: String) -> String {
     let mut c = s1.chars();
@@ -138,6 +134,16 @@ fn ok_instance_of(instance_of: &Vec<String>) -> bool {
 //     return true;
 // }
 
+pub fn get_image(item_json: &Value) -> Option<String> {
+    let image = &item_json["claims"]["P18"][0];
+    return Some(image.as_str()?.to_string());
+}
+
+pub fn get_label(item_json: &Value) -> Option<String> {
+    let label = &item_json["labels"]["en"];
+    return Some(label.as_str()?.to_string());
+}
+
 pub fn process_item_json(
     item_json: &str,
     // date_props: &HashMap<&str, &str>,
@@ -170,9 +176,12 @@ pub fn process_item_json(
     //     return None;
     // }
 
-    let page_views = page_views::get(&wikipedia_title, client)?;
+    // let page_views = page_views::get(&wikipedia_title, client)?;
 
-    let Wikipedia { image, label } = wikipedia::get(&wikipedia_title, client)?;
+    // let Wikipedia { image, label } = wikipedia::get(&wikipedia_title, client)?;
+    let image = get_image(&item_json)?;
+
+    let label = get_label(&item_json)?;
 
     Some(Item {
         description,
@@ -180,7 +189,7 @@ pub fn process_item_json(
         image,
         instance_of,
         label,
-        page_views,
+        // page_views,
         wikipedia_title,
         population,
     })

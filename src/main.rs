@@ -26,15 +26,18 @@ fn main() {
     let mut count: usize = 0;
     let mut seen_count: usize = 0;
 
+    const IN_FILENAME: &str = "./processed_test.json";
+    const OUT_FILENAME: &str = "items_test2.json";
+
     // File hosts must exist in current path before this produces output
-    let lines = read_lines("./processed.json").unwrap();
+    let lines = read_lines(IN_FILENAME).unwrap();
 
     let client = Client::builder().build().unwrap();
     let mut id_label_map: HashMap<String, String> = HashMap::new();
 
     let total: usize = 47711555;
 
-    let path = Path::new("items.json");
+    let path = Path::new(OUT_FILENAME);
     let display = path.display();
 
     // Open a file in write-only mode, returns `io::Result<File>`
@@ -66,7 +69,6 @@ fn main() {
                     "https://en.wikipedia.org/wiki/{}",
                     item.wikipedia_title.replace(" ", "_")
                 );
-                info!("page_views: {}", &item.page_views);
                 info!("instance_of: {}", &item.instance_of.join(","));
                 info!("");
 

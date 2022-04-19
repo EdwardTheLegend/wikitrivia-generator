@@ -9,7 +9,6 @@ pub struct Item {
     pub image: String,
     pub instance_of: Vec<String>,
     pub label: String,
-    pub page_views: usize,
     pub wikipedia_title: String,
     pub population: u64,
 }
