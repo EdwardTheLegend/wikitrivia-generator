@@ -18,23 +18,23 @@ fn first_letter_to_uppper_case(s1: String) -> String {
 
 fn get_id(item_json: &Value) -> Option<String> {
     let id = &item_json["id"].as_str()?;
-    return Some(id.to_string());
+    Some(id.to_string())
 }
 
 fn get_wikipedia_title(item_json: &Value) -> Option<String> {
     let wikipedia_title = &item_json["sitelinks"]["enwiki"].as_str()?;
-    return Some(wikipedia_title.to_string());
+    Some(wikipedia_title.to_string())
 }
 
 fn get_population(item_json: &Value) -> Option<u64> {
     let population = &item_json["claims"]["P1082"][0];
-    return Some(population.as_u64()?);
+    population.as_u64()
 }
 
 fn get_description(item_json: &Value) -> Option<String> {
     let description = item_json["descriptions"].get("en")?;
     let description = first_letter_to_uppper_case(description.as_str().unwrap().to_string());
-    return Some(description);
+    Some(description)
 }
 
 // fn ok_description(description: &str) -> bool {
@@ -99,25 +99,17 @@ fn get_instance_of(
     id_label_map: &mut HashMap<String, String>,
     client: &Client,
 ) -> Option<Vec<String>> {
-    return match item_json["claims"]["P31"].as_array() {
-        Some(ids) => Some(
-            ids.into_iter()
-                .map(|id| return item_label::get(id.as_str().unwrap(), id_label_map, &client))
-                .filter(|label_option| return label_option.is_some())
-                .map(|label_option| return label_option.unwrap())
-                .collect(),
-        ),
-        _ => None,
-    };
+    return item_json["claims"]["P31"].as_array().map(|ids| ids.iter().filter_map(|id| return item_label::get(id.as_str().unwrap(), id_label_map, client))
+                .collect());
 }
 
-fn ok_instance_of(instance_of: &Vec<String>) -> bool {
-    if instance_of.clone().contains(&String::from("taxon")) {
+fn ok_instance_of(instance_of: &[String]) -> bool {
+    if instance_of.to_owned().contains(&String::from("taxon")) {
         debug!("Ignore taxon instances");
         return false;
     }
 
-    return true;
+    true
 }
 
 // fn get_num_sitelinks(item_json: &Value) -> Option<usize> {
@@ -150,7 +142,7 @@ pub fn process_item_json(
     id_label_map: &mut HashMap<String, String>,
     client: &Client,
 ) -> Option<Item> {
-    let item_json: Value = serde_json::from_str(&item_json).unwrap();
+    let item_json: Value = serde_json::from_str(item_json).unwrap();
 
     let population = get_population(&item_json).unwrap_or_default();
 

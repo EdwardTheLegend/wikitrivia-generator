@@ -67,16 +67,15 @@ fn main() {
                 info!("https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/{}&width=300", urlencoding::encode(&item.image));
                 info!(
                     "https://en.wikipedia.org/wiki/{}",
-                    item.wikipedia_title.replace(" ", "_")
+                    item.wikipedia_title.replace(' ', "_")
                 );
                 info!("instance_of: {}", &item.instance_of.join(","));
                 info!("");
 
                 let json = serde_json::to_string(&item).unwrap();
 
-                match file.write(format!("{}\n", json).as_bytes()) {
-                    Err(why) => panic!("couldn't write to {}: {}", display, why),
-                    Ok(_) => (),
+                if let Err(why) = file.write(format!("{}\n", json).as_bytes()) {
+                    panic!("couldn't write to {}: {}", display, why);
                 }
             }
         }

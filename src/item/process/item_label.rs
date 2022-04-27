@@ -65,5 +65,5 @@ pub fn get(
 
     id_label_map.insert(id.to_string(), label.to_string());
 
-    return Some(label);
+    Some(label)
 }
