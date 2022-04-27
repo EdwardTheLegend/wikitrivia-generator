@@ -26,8 +26,8 @@ fn main() {
     let mut count: usize = 0;
     let mut seen_count: usize = 0;
 
-    const IN_FILENAME: &str = "./processed_test.json";
-    const OUT_FILENAME: &str = "items_test2.json";
+    const IN_FILENAME: &str = "./processed.json";
+    const OUT_FILENAME: &str = "items2.json";
 
     // File hosts must exist in current path before this produces output
     let lines = read_lines(IN_FILENAME).unwrap();
