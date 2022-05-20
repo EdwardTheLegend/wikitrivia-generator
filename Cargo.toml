@@ -1,7 +1,7 @@
 [package]
 name = "wikitrivia"
 version = "0.1.0"
-authors = ["Tom Watson <tom@tomjwatson.com>"]
+authors = ["Edward Lowe <edward@edwardtlowe.com>"]
 edition = "2018"
 
 [dependencies]

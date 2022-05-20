@@ -1,5 +1,7 @@
 The MIT License (MIT)
 
+Copyright (c) 2022 Edward Tsoi Lowe
+
 Copyright (c) 2022 Thomas James Watson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
